@@ -1,0 +1,29 @@
+Conceitos básicos de SQL
+  Banco de dados em SQL são sempre tabulares
+  Colunas - Campos
+  Linhas - Registros
+  Chaves primárias
+  Chave estrangeira - Chave de conexão com outra tabela
+  Esquemas - grupo de tabelas
+  Visao - Visualização de tabelas com resultados pré-filtrados
+  Trigger - avisos
+ 
+Funções básicas
+  Select "parametroBusca" from "nomeTabela" - Selecionar uma tabela
+  Create Database - Criar um esquema
+    Tem como criar um schema pelo botão direito do mouse na tela de schemas
+  Drop Database - Excluirr um schema
+  Create Table nomeTabela - Criar uma tabela
+    (coluna1,coluna2,coluna3) - criar as colunas, tem que estar escrito dentro do comando create table
+      É possível também criar a tabela pelo assistente do workbench
+  Drop table - excluir uma tabela
+  Insert Into nomeTabela (ordemDasColunas) VALUES (valordaNovaLinha) - Inserir uma linha na tabela, colocando as informações em parenteses e separando por ,
+      
+Tips de dados
+  Int - numeros inteiros
+    Tamanhos de int - Tinyint (1byte), smallint(2bytes), mediumint(3bytes), int(4bytes), bigint(8bytes)
+  Float(4bytes)/Double(8bytes) - numeros decimais
+  Bit - informação booleana
+  Date - tempo
+    Datetime, timestamp, time, year
+  Varchar - strings
