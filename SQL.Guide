@@ -27,3 +27,170 @@ Tips de dados
   Date - tempo
     Datetime, timestamp, time, year
   Varchar - strings
+___________________________________________________________________________________________________________________________________________________________
+                                            CRIANDO DATABASE
+  -- Inserir registro na tabela
+insert into city (Name, ID, CountryCode, District, Population)
+values ("Saude", 6500, "BRA", "Zona Oeste", 12600);
+
+-- Alterar registro na tabela
+update city set Population = 13000 , District = "Sé" where Name = "Saude";
+
+-- Deletar registro de uma tabela
+delete from city where Name = "Saude";
+
+-- Adicionar chave primária
+alter table city add primary key (ID); 
+
+-- Adicionar coluna na tabela
+alter table city add column (GDP bigint(10));
+
+select Name,District,Population from city;
+
+select * from city where Population > 2000000 and CountryCode = "BRA";
+
+-- Outra forma de fazer selecoes multiplas
+select * from city where CountryCode in ("BRA","ARG");
+
+select * from city where Population > 2000000 or CountryCode = "BRA";
+
+-- Alterar nomes na coluna das tabelas
+select ID as Codigo, Name as Nome, Population as Populacao from city;
+
+_________________________________________________________________________________________________________________________________________________
+                                                          CONSULTAS
+                                                          
+-- Usar coringas para filtros
+select * from city where name like "Santa %";
+
+select distinct continent from country;
+
+select * from country limit 0,2;
+
+select * from country order by Population desc;
+
+-- Eh possivel usar as funcoes COUNT(), MAX(), MIN(), SUM(), AVG() apos o select para fazer o agrupamento
+select max(Population), Name from country group by Region;
+
+-- And, or, not
+-- Tem que ser usados separadamente se combinados
+	-- Selecionar as cidades que não sejam countrycode BRA e ARG
+select * from city where not CountryCode = "BRA" and not CountryCode = "ARG";
+
+-- O having eh usado soh para fazer filtros no resultado ja agrupado
+select max(Population), Name from country group by Region having max(Population) >= 300000000;
+
+-- O exists é usado para fazer um filtro de uma consulta com base em uma subconsulta
+select * from country where Exists (select * from country where Population >= 300000000);
+
+-- Criar nova coluna classificando registros, sintaxe "Case when condicao1 then resultado1 [...] else valorElse end"
+select Name as nome, SurfaceArea as Area, LifeExpectancy as ExpectativaVida, case when (Region = "South America") Then "Brazucas Porra" Else "N eh brazuca F" end as "Brazuca" from country;
+
+-- É possível fazer seleções, funções e stored procedures com os seguintes coringas
+-- % (Representa zero ou vários caracteres)
+-- _ (Representa um único caracter)
+
+select * from city where countrycode like "_RA";
+
+select * from city where countrycode like "%RA";
+
+-- Any e All retornam um valor booleano se alguma subconsulta atender o parâmetro
+
+____________________________________________________________________________________________________________________________________________
+                                          JOINS
+  use world;
+
+-- Joins
+
+-- Inner Join "Retorna uma tabela so com os registros combinantes"
+-- Left join "Retorna todos os dados da esquerda com os dados combinantes da direita"
+-- Right join "Retorna todos os dados da direita com os dados combinantes da esquerda"
+-- Cross join "Cruza todos os dados da tabela"
+
+-- select A.coluna1, A.ColunaN, B.Coluna1, B.ColunaN 
+-- from tabela1 A xxxxxx join tabela2 B on A.Semelhante = B.Semelhante
+select A.LifeExpectancy, A.GNP, A.Name, B.Language, B.Percentage from country A inner join countrylanguage B on A.Code = B.CountryCode;
+
+-- Union "Une os resultados de 2 ou mais selects"
+-- O UNION tem que ter os selects com o mesmo numero de colunas, mesmo datatype e a mesma ordem
+-- UNION só traz valores distintos. Para usar valores duplicados, usar UNION ALL
+
+-- Eh possivel fazer subconsultas, ou seja, consultas dentro de outras consultas
+select * from country where Continent in (select * from city where Population >= 3000000);
+
+____________________________________________________________________________________________________________________________________________________________
+                                                    FUNCOES
+      -- Concat "Faz concatenacao de strings"
+select concat("Olá", "Mundo");
+	-- Concat_WS "Faz a concatenacao com um separador
+		select concat_ws("_","olá","mundo");
+
+-- Trim, ltrim e rtrim "Faz a limpeza de espaços em branco"
+select trim("   Meu nome      é      ");
+
+-- Lower ou Lcase "Faz a string ficar com letras minusculas"
+-- Upper ou Ucase "Faz a string ficar com letras maiusculas"
+
+-- Substring "Retira uma parte da string"
+select substr("Olá Mundo", 2,3);
+
+-- Lenght "Retorna a quantidade de caracteres
+select length("aaaaaa");
+
+-- Instr (In str) "Verifica qual a posição de uma parte da string
+select instr("saodkfwq", "q");
+
+-- Field "Mostra o indice de uma substring em uma string"
+	-- field(valorProcurado, valor1, valorN...)
+		select field("a", "c", "p", "a", "2");
+
+-- Insert "Insere uma string dentro de outra string
+	-- insert (strOriginal, posicaoInserirStrNova, numeroDeCaracteresParaModificar, strNova)
+
+-- Left ou right "Extrai uma parte da string, a partir da esqueda ou da direita
+	select left("sodapmfwe", 3);
+  
+  ____________________________________________________________________________________________________________________________________
+                                                    MANIPULAR DB
+                                                    
+    -- Create table
+	-- Eh possivel criar uma tabela a partir de uma tablea existente
+		Create table NovosPaises as select Name, Region, SurfaceArea, Capital from country;
+        
+-- Alter table "O Alter table altera a estrutura da tabela. O Update altera registros dentro da tabela"
+	-- Alter Table nomeTabela Add novaColuna -> Cria nova coluna na tabela
+	-- Alter Table nomeTabela Drop column novaColuna -> Deleta coluna na tabela
+	-- Alter Table nomeTabela Modify column nomeTabela tipoData -> Altera o datatype da coluna na tabela
+
+-- Commit e Rollback
+	-- É possivel criar um ponto de memória dentro das transações no workbench
+		-- Inicio (START TRANSACTION)
+			-- Confirmar alteracao (COMMIT)
+            -- Cancelar alteracao (ROLLBACK)
+ _______________________________________________________________________________________________________________________
+                                                    -- CREATE PROCEDURE nomedaprocedure
+-- BEGIN
+
+-- END
+
+-- É sempre importante usar delimiter para rodar uma procedure
+
+-- Podemos usar o comando EXIT HANDLE FOR numeroErro
+						-- BEGIN
+                        
+                        -- END
+	-- Esse comando ajuda a criar uma mensagem personalizada com algum erro
+    
+-- IF ..... THEN ....... ELSE ......... ELSEIF ....... END IF
+
+_______________________________________________________________________________________________________________________________
+                                                        TRIGGERS
+  
+  -- triggers
+
+-- sintaxe
+	-- CREATE TRIGGER tg_nome (AFTER/BEFORE) (INSERT, DELETE, UPDATE, LOAD DATA, REPLACE) ON tabela_nome 
+    -- FOR EACH ROW BEGIN
+    -- código
+    -- END
+            
